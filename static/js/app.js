@@ -18,9 +18,73 @@ function buildMetadata(sample) {
         var cell = row.append("h6");
         cell.text(key + ":" + value);
       });
+      buildGauge(data.WFREQ);
     });
     // BONUS: Build the Gauge Chart
-    // buildGauge(data.WFREQ);
+   
+}
+
+function buildGauge(frequency){
+  // Enter a speed between 0 and 180
+var level = frequency*20;
+console.log(`Frequency:${frequency}`);
+// Trig to calc meter point
+var degrees = 180 - level,
+     radius = .5;
+var radians = degrees * Math.PI / 180;
+var x = radius * Math.cos(radians);
+var y = radius * Math.sin(radians);
+
+// Path: may have to change to create a better triangle
+var mainPath = 'M -.0 -0.025 L .0 0.025 L ',
+     pathX = String(x),
+     space = ' ',
+     pathY = String(y),
+     pathEnd = ' Z';
+var path = mainPath.concat(pathX,space,pathY,pathEnd);
+
+var gauge_data = [{ type: 'scatter',
+   x: [0], y:[0],
+    marker: {size: 28, color:'850000'},
+    showlegend: false,
+    name: 'speed',
+    text: level,
+    hoverinfo: 'text+name'},
+  { values: [50/9, 50/9, 50/9, 50/9, 50/9, 50/9,50/9, 50/9,50/9,50],
+  rotation: 90,
+  text: ['8-9','7-8','6-7','5-6', '4-5', '3-4', '2-3',
+            '1-2', '0-1'],
+  textinfo: 'text',
+  textposition:'inside',
+  marker: {colors:['rgba(14, 127, 0, .5)','rgba(65, 178, 51, .5)','rgba(91, 204, 77, .5)','rgba(14, 127, 0, .5)','rgba(102, 127, 12, .5)', 'rgba(110, 154, 22, .5)',
+                         'rgba(170, 202, 42, .5)', 'rgba(202, 209, 95, .5)',
+                         'rgba(210, 206, 145, .5)', 'rgba(255, 255, 255, 1)']},
+  
+  
+  hole: .5,
+  type: 'pie',
+  showlegend: false
+}];
+
+var gauge_layout = {
+  shapes:[{
+      type: 'path',
+      path: path,
+      fillcolor: '850000',
+      line: {
+        color: '850000'
+      }
+    }],
+  title: '<b>Gauge</b> <br> Speed 0-100',
+  height: 600,
+  width: 600,
+  xaxis: {zeroline:false, showticklabels:false,
+             showgrid: false, range: [-1, 1]},
+  yaxis: {zeroline:false, showticklabels:false,
+             showgrid: false, range: [-1, 1]}
+};
+
+Plotly.newPlot('gauge', gauge_data, gauge_layout);
 }
 
 function buildCharts(sample) {
@@ -29,8 +93,7 @@ function buildCharts(sample) {
   d3.json(`/samples/${sample}`).then(function(data){
 
     // @TODO: Build a Bubble Chart using the sample data
-    
-    
+      
     //var bubbleChart = d3.select('#bubble');
     
     var bubbleData = [{
@@ -63,15 +126,15 @@ function buildCharts(sample) {
     var layout = {
       title: "Pie Chart",
       height: 400,
-      width: 600
+      width: 500
     };
 
     console.log(pie_data);
-    console.log("hello");
+    //console.log("hello");
     Plotly.newPlot('pie',pie_data,layout);
     //d3.select("#selDataset").on('change',Plotly.restyle('pie',pie_data,layout));
     
-    console.log("bye");
+    //console.log("bye");
   });
   
 }
