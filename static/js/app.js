@@ -30,37 +30,40 @@ function buildCharts(sample) {
 
     // @TODO: Build a Bubble Chart using the sample data
     //d3.select('#pie').html('');
-    var pieChart = d3.select("#pie");
-    var bubbleChart = d3.select('#bubble');
+    
+    //var bubbleChart = d3.select('#bubble');
     
     // var bubbleData = data;
     // bubbleData['mode'] = 'markers';
     //data.forEach(d=>console.log(d));
     //var bubbleLayout ={};
     //bubbleChart.append(Plotly.plot('bubble',data));
+    
     // @TODO: Build a Pie Chart
     // HINT: You will need to use slice() to grab the top 10 sample_values,
-    //var pie_slice = [data]
-    var pie_data =[{labels: data.otu_labels.slice(0,10),
-                    values: data.sample_values.slice(0,10),
-                    type: 'pie'}]
-    // pie_slice.slice(0,11).forEach(d=>{
-    //   pie_data = [{
-    //     labels: d.otu_labels,
-    //     values: d.sample_values
-    //   }];
-    //   pieChart.append(Plotly.plot('pie', pie_data));
-    // });
+    
+    //d3.select("#pie").html('');
+    var pieChart = d3.select("#pie");
+
+    var pie_data =[{
+              labels: data.otu_ids.slice(0,10),
+              values: data.sample_values.slice(0,10),
+              type: 'pie'
+    }];
+    
     var layout = {
       title: "Pie Chart",
       height: 400,
-      width: 500}
+      width: 600
+    };
 
     console.log(pie_data);
     pieChart.append(Plotly.plot('pie',pie_data,layout));
+    d3.select("#selDataset").on('change',Plotly.restyle('pie',pie_data,layout));
     
     // otu_ids, and labels (10 each).
   });
+  
 }
 
 function init() {
