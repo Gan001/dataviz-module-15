@@ -29,25 +29,34 @@ function buildCharts(sample) {
   d3.json(`/samples/${sample}`).then(function(data){
 
     // @TODO: Build a Bubble Chart using the sample data
-    //d3.select('#pie').html('');
+    
     
     //var bubbleChart = d3.select('#bubble');
     
-    // var bubbleData = data;
-    // bubbleData['mode'] = 'markers';
-    //data.forEach(d=>console.log(d));
-    //var bubbleLayout ={};
-    //bubbleChart.append(Plotly.plot('bubble',data));
+    var bubbleData = [{
+      x: data.otu_ids,
+      y: data.sample_values,
+      mode: 'markers',
+      marker:{size: data.sample_values, color:data.otu_ids},
+      text: data.otu_labels
+    }];
+    var bubble_layout = {xaxis:{title: 'OTU', showline: false}, yaxis:{title: 'Sample values', showline: false}};
+    console.log(bubbleData);
+    Plotly.newPlot('bubble',bubbleData, bubble_layout);
+    //console.log('hello');
+    
     
     // @TODO: Build a Pie Chart
     // HINT: You will need to use slice() to grab the top 10 sample_values,
+    // otu_ids, and labels (10 each).
     
     //d3.select("#pie").html('');
-    var pieChart = d3.select("#pie");
+    //var pieChart = d3.select("#pie");
 
     var pie_data =[{
               labels: data.otu_ids.slice(0,10),
-              values: data.sample_values.slice(0,10),
+              values: data.sample_values.sort((first, sec)=> {return sec-first;}).slice(0,10),
+              hovertext: data.otu_labels,
               type: 'pie'
     }];
     
@@ -58,10 +67,11 @@ function buildCharts(sample) {
     };
 
     console.log(pie_data);
-    pieChart.append(Plotly.plot('pie',pie_data,layout));
-    d3.select("#selDataset").on('change',Plotly.restyle('pie',pie_data,layout));
+    console.log("hello");
+    Plotly.newPlot('pie',pie_data,layout);
+    //d3.select("#selDataset").on('change',Plotly.restyle('pie',pie_data,layout));
     
-    // otu_ids, and labels (10 each).
+    console.log("bye");
   });
   
 }
