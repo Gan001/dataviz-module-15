@@ -5,7 +5,7 @@ function buildMetadata(sample) {
   // Use `d3.json` to fetch the metadata for a sample
     d3.json(`/metadata/${sample}`).then(function(data){
     // Use `.html("") to clear any existing metadata
-    d3.select('#sample-metadata').html(' ');
+    d3.select('#sample-metadata').html('');
     // Use d3 to select the panel with id of `#sample-metadata`
     var table = d3.select('#sample-metadata');
     // Use `Object.entries` to add each key and value pair to the panel
@@ -24,14 +24,41 @@ function buildMetadata(sample) {
 }
 
 function buildCharts(sample) {
-
+  
   // @TODO: Use `d3.json` to fetch the sample data for the plots
   d3.json(`/samples/${sample}`).then(function(data){
 
     // @TODO: Build a Bubble Chart using the sample data
-
+    //d3.select('#pie').html('');
+    var pieChart = d3.select("#pie");
+    var bubbleChart = d3.select('#bubble');
+    
+    // var bubbleData = data;
+    // bubbleData['mode'] = 'markers';
+    //data.forEach(d=>console.log(d));
+    //var bubbleLayout ={};
+    //bubbleChart.append(Plotly.plot('bubble',data));
     // @TODO: Build a Pie Chart
     // HINT: You will need to use slice() to grab the top 10 sample_values,
+    //var pie_slice = [data]
+    var pie_data =[{labels: data.otu_labels.slice(0,10),
+                    values: data.sample_values.slice(0,10),
+                    type: 'pie'}]
+    // pie_slice.slice(0,11).forEach(d=>{
+    //   pie_data = [{
+    //     labels: d.otu_labels,
+    //     values: d.sample_values
+    //   }];
+    //   pieChart.append(Plotly.plot('pie', pie_data));
+    // });
+    var layout = {
+      title: "Pie Chart",
+      height: 400,
+      width: 500}
+
+    console.log(pie_data);
+    pieChart.append(Plotly.plot('pie',pie_data,layout));
+    
     // otu_ids, and labels (10 each).
   });
 }
