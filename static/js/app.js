@@ -47,9 +47,9 @@ function buildGauge(frequency){
       x: [0], y:[0],
       marker: {size: 28, color:'850000'},
       showlegend: false,
-      name: 'speed',
+      name: 'frequency',
       text: level,
-      hoverinfo: 'text+name'
+      hoverinfo: 'name'
     },
     { values: [50/9, 50/9, 50/9, 50/9, 50/9, 50/9, 50/9, 50/9, 50/9, 50],
       rotation: 90,
