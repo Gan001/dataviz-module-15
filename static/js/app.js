@@ -11,7 +11,7 @@ function buildMetadata(sample) {
     // Use `Object.entries` to add each key and value pair to the panel
     // Hint: Inside the loop, you will need to use d3 to append new
     // tags for each key-value in the metadata.
-      var row = table.append("p");
+      var row = table.append("div");
       Object.entries(data).forEach(function([key, value]) {
         console.log(key, value);
         // Append a cell to the row for each value
@@ -20,13 +20,11 @@ function buildMetadata(sample) {
       });
       // BONUS: Build the Gauge Chart
       buildGauge(data.WFREQ);
-    });
-    
-   
+    });  
 }
 
 function buildGauge(frequency){
-  // Enter a speed between 0 and 180
+  // frequency(9 values) between 0 and 180 multiply by 20 so that 9 values goes into 180
   var level = frequency*20;
   console.log(`Frequency:${frequency}`);
   // Trig to calc meter point
@@ -62,8 +60,8 @@ function buildGauge(frequency){
       textinfo: 'text',
       textposition:'inside',
       marker: {
-            colors:[ 'rgba(14, 127, 0, .5)','rgba(65, 178, 51, .5)',
-                      'rgba(91, 204, 77, .5)','rgba(14, 127, 0, .5)',
+            colors:[ 'rgba(0, 51, 0, .5)','rgba(0, 76, 0, .5)',
+                      'rgba(0, 102, 0, .5)','rgba(14, 127, 0, .5)',
                       'rgba(102, 127, 12, .5)', 'rgba(110, 154, 22, .5)',
                       'rgba(170, 202, 42, .5)', 'rgba(202, 209, 95, .5)',
                       'rgba(210, 206, 145, .5)', 'rgba(255, 255, 255, 0)'
@@ -114,7 +112,7 @@ function buildCharts(sample) {
 
     //layout for bubble
     var bubble_layout = {
-      xaxis:{title: 'OTU', showline: false}, 
+      xaxis:{title: 'OTU ID', showline: false}, 
       yaxis:{title: 'Sample values', showline: false}
     };
     //display data in console
@@ -125,21 +123,42 @@ function buildCharts(sample) {
     // Build a Pie Chart
     // HINT: You will need to use slice() to grab the top 10 sample_values,
     // otu_ids, and labels (10 each).
+    
+    //combine data to be sorted
+    const pie_map = [];
+    for(var i = 0; i < data.sample_values.length;i++){
+      pie_map.push([data.sample_values[i],data.otu_ids[i],data.otu_labels[i]]);
+    }
+    //sort based on sample_values which are located at 0th index of inner array
+    const pie_sort = pie_map.sort((a,b) => {return b[0]-a[0]});
+    
+    const pieSortSliced = pie_sort.slice(0,10);
+    //console.log(pieSortSliced);
+
+    //separate sorted and sliced data into own arrays to use in pie chart
+    const pie_ids = [];
+    const pie_values = [];
+    const pie_labels = [];
+    pieSortSliced.forEach(d =>{
+      pie_values.push(d[0]);
+      pie_ids.push(d[1]);
+      pie_labels.push(d[2]);
+    });
+
     var pie_data =[{
-              labels: data.otu_ids.slice(0,10),
-              values: data.sample_values.sort((first, sec)=> {return sec-first;}).slice(0,10),
-              hovertext: data.otu_labels,
+              labels: pie_ids,
+              values: pie_values,
+              hovertext: pie_labels,
               type: 'pie'
     }];
     
     var layout = {
-      title: "Pie Chart",
       height: 400,
       width: 500
     };
     //display data in console
     console.log(pie_data);
-
+    
     Plotly.newPlot('pie',pie_data,layout);
   });
   
